@@ -2,6 +2,9 @@
 
 source /app/libexec/functions.sh
 
+size='<span font="18">'
+endsize='</span>'
+
 debug_dialog() {
   # This function is for displaying commands run by the Configurator without actually running them
   # USAGE: debug_dialog "command"
@@ -9,7 +12,7 @@ debug_dialog() {
   zenity --icon-name=net.retrodeck.retrodeck --info --no-wrap \
   --window-icon="/app/share/icons/hicolor/scalable/apps/net.retrodeck.retrodeck.svg" \
   --title "RetroDECK Configurator Utility - Debug Dialog" \
-  --text="$1"
+  --text="$size $1 $endsize"
 }
 
 configurator_process_complete_dialog() {
@@ -18,7 +21,7 @@ configurator_process_complete_dialog() {
   zenity --icon-name=net.retrodeck.retrodeck --info --no-wrap --ok-label="Quit" --extra-button="OK" \
   --window-icon="/app/share/icons/hicolor/scalable/apps/net.retrodeck.retrodeck.svg" \
   --title "RetroDECK Configurator Utility - Process Complete" \
-  --text="The process of $1 is now complete.\n\nYou may need to quit and restart RetroDECK for your changes to take effect\n\nClick OK to return to the Main Menu or Quit to quit RetroDECK."
+  --text="$size The process of $1 is now complete.\n\nYou may need to quit and restart RetroDECK for your changes to take effect\n\nClick OK to return to the Main Menu or Quit to quit RetroDECK. $endsize"
 
   if [ ! $? == 0 ]; then # OK button clicked
       configurator_welcome_dialog
@@ -34,7 +37,7 @@ configurator_generic_dialog() {
   zenity --icon-name=net.retrodeck.retrodeck --info --no-wrap \
   --window-icon="/app/share/icons/hicolor/scalable/apps/net.retrodeck.retrodeck.svg" \
   --title "$1" \
-  --text="$2"
+  --text="$size $2 $endsize"
 }
 
 configurator_generic_question_dialog() {
@@ -43,7 +46,7 @@ configurator_generic_question_dialog() {
   # This function will return a "true" if the user clicks "Yes", and "false" if they click "No".
   choice=$(zenity --title "RetroDECK - $1" --question --no-wrap --cancel-label="No" --ok-label="Yes" \
   --window-icon="/app/share/icons/hicolor/scalable/apps/net.retrodeck.retrodeck.svg" \
-  --text="$2")
+  --text="$size $2 $endsize")
   if [[ $? == "0" ]]; then
     echo "true"
   else
@@ -57,7 +60,7 @@ configurator_destination_choice_dialog() {
   # This function returns one of the values: "Back" "Internal Storage" "SD Card" "Custom Location"
   choice=$(zenity --title "RetroDECK Configurator Utility - Moving $1 folder" --info --no-wrap --ok-label="Back" --extra-button="Internal Storage" --extra-button="SD Card" --extra-button="Custom Location" \
   --window-icon="/app/share/icons/hicolor/scalable/apps/net.retrodeck.retrodeck.svg" \
-  --text="$2")
+  --text="$size $2 $endsize")
 
   local rc=$?
   if [[ $rc == "0" ]] && [[ -z "$choice" ]]; then
@@ -73,7 +76,7 @@ configurator_reset_confirmation_dialog() {
   # This function will return a "true" if the user clicks Confirm, and "false" if they click Cancel.
   choice=$(zenity --title "RetroDECK Configurator Utility - Reset $1" --question --no-wrap --cancel-label="Cancel" --ok-label="Confirm" \
   --window-icon="/app/share/icons/hicolor/scalable/apps/net.retrodeck.retrodeck.svg" \
-  --text="$2")
+  --text="$size $2 $endsize")
   if [[ $? == "0" ]]; then
     echo "true"
   else
@@ -134,7 +137,7 @@ configurator_move_folder_dialog() {
             zenity --icon-name=net.retrodeck.retrodeck --error --no-wrap \
             --window-icon="/app/share/icons/hicolor/scalable/apps/net.retrodeck.retrodeck.svg" \
             --title "RetroDECK Configurator Utility - Move Directories" \
-            --text="The destination directory you have selected does not have enough free space for the files you are trying to move.\n\nPlease select a new destination or free up some space."
+            --text="$size The destination directory you have selected does not have enough free space for the files you are trying to move.\n\nPlease select a new destination or free up some spac e. $endsize"
           fi
         fi
       else # If the user didn't pick any custom destination, or the destination picked is unwritable
@@ -190,7 +193,7 @@ get_cheevos_token_dialog() {
   # USAGE: get_cheevos_token_dialog
 
   local cheevos_info=$(zenity --forms --title="Cheevos" \
-  --text="Username and password." \
+  --text="$size Username and password. $endsize"\
   --separator="^" \
   --add-entry="Username" \
   --add-password="Password")
@@ -219,7 +222,7 @@ desktop_mode_warning() {
     choice=$(zenity --icon-name=net.retrodeck.retrodeck --info --no-wrap --ok-label="Yes" --extra-button="No" --extra-button="Never show this again" \
     --window-icon="/app/share/icons/hicolor/scalable/apps/net.retrodeck.retrodeck.svg" \
     --title "RetroDECK Desktop Mode Warning" \
-    --text="$message")
+    --text="$size $message $endsize")
     rc=$? # Capture return code, as "Yes" button has no text value
     if [[ $rc == "1" ]]; then # If any button other than "Yes" was clicked
       if [[ $choice == "No" ]]; then
@@ -247,7 +250,7 @@ low_space_warning() {
       choice=$(zenity --icon-name=net.retrodeck.retrodeck --info --no-wrap --ok-label="OK" --extra-button="Never show this again" \
       --window-icon="/app/share/icons/hicolor/scalable/apps/net.retrodeck.retrodeck.svg" \
       --title "RetroDECK Low Space Warning" \
-      --text="$message")
+      --text="$size $message $endsize")
       if [[ $choice == "Never show this again" ]]; then
         log i "Selected: \"Never show this again\""
         set_setting_value $rd_conf "low_space_warning" "false" retrodeck "options" # Store low space warning variable for future checks
